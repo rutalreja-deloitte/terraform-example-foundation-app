@@ -34,7 +34,7 @@ module "iap_bastion" {
   network      = data.google_compute_network.vpc.self_link
   subnet       = data.google_compute_subnetwork.bastion_subnet.self_link
   host_project = var.network_project_id
-
+  
   # Customizable Variables
   name                 = var.bastion_name
   zone                 = var.bastion_zone
@@ -51,7 +51,14 @@ module "iap_bastion" {
     "roles/serviceusage.serviceUsageAdmin",
     "roles/privateca.admin"
   ]
-  shielded_vm = false
-  members     = var.bastion_members
-  tags        = ["bastion", "allow-google-apis"]
+  create_firewall_rule = false
+  shielded_vm          = false
+  members              = var.bastion_members
+  tags                 = ["bastion", "allow-google-apis", "egress-internet"]
+}
+
+resource "google_project_iam_member" "app_cicd_cloudbuild_sa_roles" {
+  project = var.repo_project_id
+  role    = "roles/source.writer"
+  member  = "serviceAccount:${module.iap_bastion.service_account}"
 }
