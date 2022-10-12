@@ -6,6 +6,6 @@
 version: 2
 updates:
   - package-ecosystem: "terraform" # See documentation for possible values
-    directory: "/5-infrastructure/modules/base-env/" # Location of package manifests
+    directory: "/5-infrastructure/modules/*/" # Location of package manifests
     schedule:
       interval: "daily"
